@@ -1,34 +1,35 @@
-import 'dart:async';
-import 'package:brick_breaker/src/components/ball.dart';
+import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-
-import 'dart:math' as math;
+import 'components/ball.dart';
+import 'components/bat.dart';
+import 'components/brick.dart';
 import 'components/play_area.dart';
 import 'config.dart';
 
 class BrickBreaker extends FlameGame with HasCollisionDetection {
-  BrickBreaker()
-      : super(
-          camera: CameraComponent.withFixedResolution(
-            width: gameWidth,
-            height: gameHeight,
-          ),
-        );
-
   @override
-  FutureOr<void> onLoad() async {
-    super.onLoad();
-    camera.viewport.anchor = Anchor.topLeft;
-    world.add(PlayArea());
-    world.add(Ball(velocity: Vector2(100, 100)));
+  Future<void> onLoad() async {
+    camera.viewport = FixedResolutionViewport(Vector2(gameWidth, gameHeight));
+    add(PlayArea());
+    add(Ball(velocity: Vector2(100, 100)));
+    add(Bat());
+    addBricks(); // 벽돌 추가
+  }
 
-    debugMode = true;
+  void addBricks() {
+    const brickWidthWithSpacing = brickWidth + 4;
+    const brickHeightWithSpacing = brickHeight + 4;
+
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        final position = Vector2(
+          col * brickWidthWithSpacing +
+              (gameWidth - cols * brickWidthWithSpacing) / 2,
+          row * brickHeightWithSpacing + 50,
+        );
+        add(Brick(position: position));
+      }
+    }
   }
 }
-
-//클래스 BrickBreaker
-//flame의 기본 로직
-//FlameGame 확장 (extends)
-
-//중돌 감지기 믹스인 = with 

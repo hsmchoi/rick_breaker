@@ -10,3 +10,9 @@ const ballRadius = gameWidth * 0.02;
 const batWidth = 0.2;
 const batHeight = 0.02;
 const batSpeed = 500;
+
+
+const brickWidth = 64.0; // 벽돌의 너비
+const brickHeight = 32.0; // 벽돌의 높이
+const rows = 5; // 벽돌의 행 수
+const cols = 8; // 벽돌의 열 수

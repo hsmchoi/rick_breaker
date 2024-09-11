@@ -1,18 +1,27 @@
+import 'package:flutter/material.dart'; // Add this import
+
+const brickColors = [
+  // Add this const
+  Color(0xfff94144),
+  Color(0xfff3722c),
+  Color(0xfff8961e),
+  Color(0xfff9844a),
+  Color(0xfff9c74f),
+  Color(0xff90be6d),
+  Color(0xff43aa8b),
+  Color(0xff4d908e),
+  Color(0xff277da1),
+  Color(0xff577590),
+];
+
 const gameWidth = 820.0;
-const gameHeight = 1000.0;
-
-//2D 게임을 할때 전체 화면에서의 크기를 미리 정해야 한다.
-//가로 820 세로 1000픽셀로 설정한다.
+const gameHeight = 1600.0;
 const ballRadius = gameWidth * 0.02;
-//같은 공의 크기와 위치 관련 설정값을 정한다.
-
-//배트 크기와 위치를 설정한다.
-const batWidth = 0.2;
-const batHeight = 0.02;
-const batSpeed = 500;
-
-
-const brickWidth = 64.0; // 벽돌의 너비
-const brickHeight = 32.0; // 벽돌의 높이
-const rows = 5; // 벽돌의 행 수
-const cols = 8; // 벽돌의 열 수
+const batWidth = gameWidth * 0.2;
+const batHeight = ballRadius * 2;
+const batStep = gameWidth * 0.05;
+const brickGutter = gameWidth * 0.015; // Add from here...
+final brickWidth =
+    (gameWidth - (brickGutter * (brickColors.length + 1))) / brickColors.length;
+const brickHeight = gameHeight * 0.03;
+const difficultyModifier = 1.03;                                // To here.

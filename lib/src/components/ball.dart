@@ -1,40 +1,69 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/experimental.dart';
+import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
 
-import '../config.dart';
+import '../brick_breaker.dart';
+import 'bat.dart';
+import 'brick.dart'; // Add this import
+import 'play_area.dart';
 
 class Ball extends CircleComponent
-    with HasGameRef<BrickBreaker>, CollisionCallbacks {
-  Ball({required Vector2 velocity})
-      : _velocity = velocity,
-        super(radius: ballRadius);
+    with CollisionCallbacks, HasGameReference<BrickBreaker> {
+  Ball({
+    required this.velocity,
+    required super.position,
+    required double radius,
+    required this.difficultyModifier, // Add this parameter
+  }) : super(
+            radius: radius,
+            anchor: Anchor.center,
+            paint: Paint()
+              ..color = const Color(0xff1e6091)
+              ..style = PaintingStyle.fill,
+            children: [CircleHitbox()]);
 
-  final Vector2 _velocity;
+  final Vector2 velocity;
+  final double difficultyModifier; // Add this member
 
   @override
   void update(double dt) {
     super.update(dt);
-    position += _velocity * dt;
-
-    // 벽에 부딪혔을 때 반응
-    if (position.y <= 0) {
-      _velocity.y = -_velocity.y;
-    }
-    if (position.x <= 0 || position.x >= gameRef.size.x) {
-      _velocity.x = -_velocity.x;
-    }
-    if (position.y >= gameRef.size.y) {
-      removeFromParent(); // 공이 화면 아래로 사라지면 제거
-    }
+    position += velocity * dt;
   }
 
   @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    super.onCollision(intersectionPoints, other);
-    if (other is Bat) {
-      _velocity.y = -_velocity.y; // 배트에 부딪히면 위로 튕김
+  void onCollisionStart(
+      Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollisionStart(intersectionPoints, other);
+    if (other is PlayArea) {
+      if (intersectionPoints.first.y <= 0) {
+        velocity.y = -velocity.y;
+      } else if (intersectionPoints.first.x <= 0) {
+        velocity.x = -velocity.x;
+      } else if (intersectionPoints.first.x >= game.width) {
+        velocity.x = -velocity.x;
+      } else if (intersectionPoints.first.y >= game.height) {
+        add(RemoveEffect(
+          delay: 0.35,
+        ));
+      }
+    } else if (other is Bat) {
+      velocity.y = -velocity.y;
+      velocity.x = velocity.x +
+          (position.x - other.position.x) / other.size.x * game.width * 0.3;
+    } else if (other is Brick) {
+      // Modify from here...
+      if (position.y < other.position.y - other.size.y / 2) {
+        velocity.y = -velocity.y;
+      } else if (position.y > other.position.y + other.size.y / 2) {
+        velocity.y = -velocity.y;
+      } else if (position.x < other.position.x) {
+        velocity.x = -velocity.x;
+      } else if (position.x > other.position.x) {
+        velocity.x = -velocity.x;
+      }
+      velocity.setFrom(velocity * difficultyModifier); // To here.
     }
   }
 }

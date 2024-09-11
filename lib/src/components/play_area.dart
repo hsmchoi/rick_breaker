@@ -24,3 +24,5 @@ class PlayArea extends RectangleComponent with HasGameRef<BrickBreaker> {
 //PlayerArea라는 클래스를 만든다. 
 // 이 클래스는 플레이 영역을 만드는게 목적이다. 마치 농장을 짓기 전에 울타리를 치는것과 같다. 
 // Flame에서 지원하는 Rectanglecomponent(직선의 부품)
+
+//

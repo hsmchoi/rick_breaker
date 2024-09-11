@@ -39,3 +39,5 @@ class BrickBreaker extends FlameGame with HasCollisionDetection {
 //클래스 BrickBreaker
 //flame의 기본 로직
 //FlameGame 확장 (extends)
+
+//중돌 감지기 믹스인 = with hascollisiondetection

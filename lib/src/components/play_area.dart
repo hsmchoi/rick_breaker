@@ -16,7 +16,7 @@ class PlayArea extends RectangleComponent with HasGameRef<BrickBreaker> {
   @override
   FutureOr<void> onLoad() async {
     super.onLoad();
-    size = Vector2(gameWidth, gameHeight);
+    size = Vector2(game.Width, game.Height);
   }
 }
 

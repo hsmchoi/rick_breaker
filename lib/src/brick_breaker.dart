@@ -21,18 +21,9 @@ class BrickBreaker extends FlameGame with HasCollisionDetection {
     super.onLoad();
     camera.viewport.anchor = Anchor.topLeft;
     world.add(PlayArea());
+    world.add(Ball(velocity: Vector2(100, 100)));
 
-    final ball = Ball(
-        velocity: (Vector2(math.cos(math.pi / 4), math.sin(math.pi / 44))
-              ..normalize()) *
-            (gameHeight / 4),
-        radius: ballRadius,
-        position: Vector2(
-          gameWidth / 2,
-          gameHeight * 0.75,
-        ));
-    //공의 속도 velocity, 반지름 radius, 초기 위치를 설정한다.
-    //너비 /2 , 높이 * 0.75 = 중앙에서 아래로 25%
+    debugMode = true;
   }
 }
 
@@ -40,4 +31,4 @@ class BrickBreaker extends FlameGame with HasCollisionDetection {
 //flame의 기본 로직
 //FlameGame 확장 (extends)
 
-//중돌 감지기 믹스인 = with hascollisiondetection
+//중돌 감지기 믹스인 = with 

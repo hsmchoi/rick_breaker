@@ -1,45 +1,40 @@
-import 'package:brick_breaker/src/brick_breaker.dart';
-import 'package:brick_breaker/src/components/play_area.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
+import '../config.dart';
+
 class Ball extends CircleComponent
-    with CollisionCallbacks, HasGameRef<BrickBreaker> {
-  Ball({
-    required this.velocity,
-    required double radius,
-    required Vector2 position,
-  }) : super(
-          radius: radius,
-          position: position,
-          anchor: Anchor.center,
-          paint: Paint()
-            ..color = const Color(0xFFe63946)
-            ..style = PaintingStyle.fill,
-        );
+    with HasGameRef<BrickBreaker>, CollisionCallbacks {
+  Ball({required Vector2 velocity})
+      : _velocity = velocity,
+        super(radius: ballRadius);
 
-  final Vector2 velocity;
+  final Vector2 _velocity;
 
-  @override //반응에 대한 정의
-  void onCollisionStart(
-      Set<Vector2> intersectionPoints, PositionComponent other) {
-    super.onCollisionStart(intersectionPoints, other);
+  @override
+  void update(double dt) {
+    super.update(dt);
+    position += _velocity * dt;
 
-    if (other is PlayArea) {
-      if (intersectionPoints.first.x <= 0 ||
-          intersectionPoints.first.x >= game.width) {
-        velocity.x = -velocity.x;
-      }
-      if (intersectionPoints.first.y <= 0) {
-        velocity.y = -velocity.y;
-      } else if (intersectionPoints.first.y >= game.height) {
-        removeFromParent(); // 공이 아래로 떨어졌을 때 제거
-      }
-    } else {
-      debugPrint('충돌 감지: $other');
+    // 벽에 부딪혔을 때 반응
+    if (position.y <= 0) {
+      _velocity.y = -_velocity.y;
+    }
+    if (position.x <= 0 || position.x >= gameRef.size.x) {
+      _velocity.x = -_velocity.x;
+    }
+    if (position.y >= gameRef.size.y) {
+      removeFromParent(); // 공이 화면 아래로 사라지면 제거
+    }
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+    if (other is Bat) {
+      _velocity.y = -_velocity.y; // 배트에 부딪히면 위로 튕김
     }
   }
 }
-//Ball 클래스를 정의한다.
-//Flame의 circleComponent를 확장해서, 공의 위치, 속도를  관리한다. (물리엔진 활용)

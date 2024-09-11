@@ -5,15 +5,17 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:brick_breaker/main.dart';
+import 'package:brick_breaker/src/brick_breaker.dart'; // BrickBreaker를 import
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    final game = BrickBreaker();
+    await tester.pumpWidget(GameWidget(game: game));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:brick_breaker/src/components/ball.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
+
 import 'dart:math' as math;
 import 'components/play_area.dart';
 import 'config.dart';
 
-class BrickBreaker extends FlameGame {
+class BrickBreaker extends FlameGame with HasCollisionDetection {
   BrickBreaker()
       : super(
           camera: CameraComponent.withFixedResolution(
